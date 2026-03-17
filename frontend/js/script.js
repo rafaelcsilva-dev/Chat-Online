@@ -99,8 +99,8 @@ const handleLogin = function (event) {
   login.style.display = "none";
   chat.style.display = "flex";
 
-  // websocket = new WebSocket("wss://chat-online-pjla.onrender.com");
-  websocket = new WebSocket("ws://localhost:8081");
+  websocket = new WebSocket("wss://chat-online-pjla.onrender.com");
+  //websocket = new WebSocket("ws://localhost:8081");
 
   websocket.onmessage = processMessage;
 };
