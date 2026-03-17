@@ -7,8 +7,6 @@ const chatForm = chat.querySelector(".chat-form");
 const chatInput = chat.querySelector(".chat-input");
 const chatMessages = chat.querySelector(".chat-messages");
 
-const loadingScreen = document.getElementById("loading");
-
 const user = {
   id: "",
   name: "",
@@ -99,30 +97,14 @@ const handleLogin = function (event) {
   user.color = getRandomColor();
 
   login.style.display = "none";
-  loadingScreen.style.display = "flex";
+  chat.style.display = "flex";
 
-  // 1. Criar a instância 
-  const ws = new WebSocket("wss://chat-online-pjla.onrender.com");
+  // websocket = new WebSocket("wss://chat-online-pjla.onrender.com");
+  websocket = new WebSocket("ws://localhost:8081");
 
-  // 2. Usar 'ws' para configurar os eventos
-  ws.onopen = () => {
-    console.log("Conectado com sucesso!");
-    loadingScreen.style.display = "none";
-    chat.style.display = "flex";
-  };
-
-  ws.onmessage = processMessage;
-
-  ws.onerror = (err) => {
-    console.error("Erro no WS:", err);
-    alert("Não foi possível conectar ao servidor local.");
-    loadingScreen.style.display = "none";
-    login.style.display = "flex";
-  };
-
-  // 3. Só agora atribuímos à nossa variável global 'websocket'
-  websocket = ws;
+  websocket.onmessage = processMessage;
 };
+
 const sendMessage = (event) => {
   event.preventDefault();
 
@@ -147,6 +129,3 @@ const scrollScreen = () => {
 
 loginForm.addEventListener("submit", handleLogin);
 chatForm.addEventListener("submit", sendMessage);
-
-//websocket = new WebSocket("wss://chat-online-pjla.onrender.com");
-//websocket = new WebSocket("ws://localhost:8081");
