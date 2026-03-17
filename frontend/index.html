@@ -1,38 +1,55 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Chat Online</title>
 
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0" />
-    <link rel="stylesheet" href="css/estilo.css">
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0"
+    />
+    <link rel="stylesheet" href="css/estilo.css" />
 
-    <link rel="shortcut icon" href="/img/chat.ico" type="image/x-icon">
-</head>
-<body>
-    
+    <link rel="shortcut icon" href="/img/chat.ico" type="image/x-icon" />
+  </head>
+  <body>
     <section class="container">
-        <section class="login">
-            <h2>Login</h2>
-            <form class="login-form">
-                <input class="login-input" type="text" placeholder="Seu nome" required>
-                <button class="login-button" type="submit">Entrar</button>
-            </form>
-        </section>
+      <section class="login">
+        <h2>Login</h2>
+        <form class="login-form">
+          <input
+            class="login-input"
+            type="text"
+            placeholder="Seu nome"
+            required
+          />
+          <button class="login-button" type="submit">Entrar</button>
+        </form>
+      </section>
 
-        <section class="chat">
-            <section class="chat-messages">
-            </section>
+      <section class="chat">
+        <section class="chat-messages"></section>
 
-            <form class="chat-form">
-                <input class="chat-input" type="text" placeholder="Digite Aqui" required>
-                <button class="chat-button" type="submit">
-                    <span class="material-symbols-outlined">send</span>
-                </button>
-            </form>
-        </section>
+        <form class="chat-form">
+          <input
+            class="chat-input"
+            type="text"
+            placeholder="Digite Aqui"
+            required
+          />
+          <button class="chat-button" type="submit">
+            <span class="material-symbols-outlined">send</span>
+          </button>
+        </form>
+      </section>
     </section>
+
+    <section id="loading">
+      <div id="spinner"></div>
+      <p>Conectando ao servidor, aguarde...</p>
+    </section>
+
     <script src="js/script.js"></script>
-</body>
+  </body>
 </html>

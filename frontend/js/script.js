@@ -7,125 +7,141 @@ const chatForm = chat.querySelector(".chat-form");
 const chatInput = chat.querySelector(".chat-input");
 const chatMessages = chat.querySelector(".chat-messages");
 
+const loadingScreen = document.getElementById("loading");
+
 const user = {
-    id: "",
-    name: "",
-    color: "",
+  id: "",
+  name: "",
+  color: "",
 };
 
 const colors = [
-    "cadetblue",
-    "darkgoldenrod",
-    "cornflowerblue",
-    "darkkhaki",
-    "hotpink",
-    "gold",
+  "cadetblue",
+  "darkgoldenrod",
+  "cornflowerblue",
+  "darkkhaki",
+  "hotpink",
+  "gold",
 ];
 
 let websocket;
 
 const getRandomColor = function () {
-    const randomIndex = Math.floor(Math.random() * colors.length);
-    return colors[randomIndex];
+  const randomIndex = Math.floor(Math.random() * colors.length);
+  return colors[randomIndex];
 };
 
 const createMessageSelfElement = (content) => {
-    const div = document.createElement("div");
+  const div = document.createElement("div");
 
-    div.classList.add("message-self");
+  div.classList.add("message-self");
 
-    div.innerHTML = content;
-    return div;
+  div.innerHTML = content;
+  return div;
 };
 
 const createMessageOtherElement = (content, sender, senderColor) => {
-    const div = document.createElement("div");
-    const span = document.createElement("span");
+  const div = document.createElement("div");
+  const span = document.createElement("span");
 
-    div.classList.add("message-other");
-    span.classList.add("message-sender");
-    span.style.color = senderColor;
+  div.classList.add("message-other");
+  span.classList.add("message-sender");
+  span.style.color = senderColor;
 
-    div.appendChild(span);
+  div.appendChild(span);
 
-    span.innerHTML = sender;
-    div.innerHTML += content;
+  span.innerHTML = sender;
+  div.innerHTML += content;
 
-    return div;
+  return div;
 };
 
 const processMessage = ({ data }) => {
-    try {
-        const parsedData = JSON.parse(data);
+  try {
+    const parsedData = JSON.parse(data);
 
-        // Verifica se 'parsedData' tem a propriedade 'message' (mensagem do servidor)
-        if (parsedData && parsedData.message) {
-            const serverMessage = parsedData.message;
+    // Verifica se 'parsedData' tem a propriedade 'message' (mensagem do servidor)
+    if (parsedData && parsedData.message) {
+      const serverMessage = parsedData.message;
 
-            // Lógica para lidar com mensagens do servidor (se necessário)
-            console.log("Conectado ao Chat!:", serverMessage);
-        } else if (
-            parsedData &&
-            parsedData.userId &&
-            parsedData.userName &&
-            parsedData.userColor &&
-            parsedData.content
-        ) {
-            const { userId, userName, userColor, content } = parsedData;
+      // Lógica para lidar com mensagens do servidor (se necessário)
+      console.log("Conectado ao Chat!:", serverMessage);
+    } else if (
+      parsedData &&
+      parsedData.userId &&
+      parsedData.userName &&
+      parsedData.userColor &&
+      parsedData.content
+    ) {
+      const { userId, userName, userColor, content } = parsedData;
 
-            const message =
-                userId === user.id
-                    ? createMessageSelfElement(content)
-                    : createMessageOtherElement(content, userName, userColor);
+      const message =
+        userId === user.id
+          ? createMessageSelfElement(content)
+          : createMessageOtherElement(content, userName, userColor);
 
-            chatMessages.appendChild(message);
+      chatMessages.appendChild(message);
 
-            scrollScreen();
-        } else {
-            console.error(
-                "A mensagem recebida não tem o formato esperado:",
-                data
-            );
-        }
-    } catch (error) {
-        console.error("Erro ao processar mensagem:", error);
+      scrollScreen();
+    } else {
+      console.error("A mensagem recebida não tem o formato esperado:", data);
     }
+  } catch (error) {
+    console.error("Erro ao processar mensagem:", error);
+  }
 };
 
 const handleLogin = function (event) {
-    event.preventDefault();
+  event.preventDefault();
 
-    user.id = crypto.randomUUID();
-    user.name = loginInput.value;
-    user.color = getRandomColor();
+  user.id = crypto.randomUUID();
+  user.name = loginInput.value;
+  user.color = getRandomColor();
 
-    login.style.display = "none";
-    chat.style.display = "flex";
+  // 1. Esconde o login e mostra a tela de "Conectando"
+  login.style.display = "none";
+  loadingScreen.style.display = "flex";
 
-    websocket = new WebSocket("wss://chat-online-pjla.onrender.com");
-    websocket.onmessage = processMessage;
+  // 2. Inicia a conexão
+  websocket = new WebSocket("ws://localhost:8081");
+
+  // 3. Quando a conexão abrir de fato...
+  websocket.onopen = () => {
+    console.log("Conectado!");
+    loadingScreen.style.display = "none"; // Esconde o loading
+    chat.style.display = "flex"; // Mostra o chat
+  };
+
+  // 4. Caso dê erro na conexão
+  websocket.onerror = () => {
+    alert("Erro ao conectar ao servidor. Tente novamente mais tarde.");
+    loadingScreen.style.display = "none";
+    login.style.display = "flex";
+  };
+
+  websocket.onmessage = processMessage;
 };
 
 const sendMessage = (event) => {
-    event.preventDefault();
+  event.preventDefault();
 
-    const message = {
-        userId: user.id,
-        userName: user.name,
-        userColor: user.color,
-        content: chatInput.value,
-    };
+  const message = {
+    userId: user.id,
+    userName: user.name,
+    userColor: user.color,
+    content: chatInput.value,
+  };
 
-    websocket.send(JSON.stringify(message));
+  websocket.send(JSON.stringify(message));
 
-    chatInput.value = "";
+  chatInput.value = "";
 };
 
 const scrollScreen = () => {
-    window.scrollTo({
-        top: document.body.scrollHeight,
-        behavior: "smooth",
-    });
+  window.scrollTo({
+    top: document.body.scrollHeight,
+    behavior: "smooth",
+  });
 };
 
 loginForm.addEventListener("submit", handleLogin);
