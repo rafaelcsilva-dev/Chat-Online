@@ -7,7 +7,7 @@ const chatForm = chat.querySelector(".chat-form");
 const chatInput = chat.querySelector(".chat-input");
 const chatMessages = chat.querySelector(".chat-messages");
 
-const loadingScreen = document.getElementById("loading")
+const loadingScreen = document.getElementById("loading");
 
 const user = {
   id: "",
@@ -102,7 +102,7 @@ const handleLogin = function (event) {
   loadingScreen.style.display = "flex";
 
   // 1. Criar a instância
-  const ws = new WebSocket("ws://localhost:8081");
+  const ws = new WebSocket("wss://chat-online-pjla.onrender.com");
 
   // 2. Usar 'ws' para configurar os eventos
   ws.onopen = () => {
