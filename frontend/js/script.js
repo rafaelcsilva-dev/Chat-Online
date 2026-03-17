@@ -103,7 +103,9 @@ const handleLogin = function (event) {
   loadingScreen.style.display = "flex";
 
   // 2. Inicia a conexão
-  websocket = new WebSocket("ws://localhost:8081");
+  websocket = new WebSocket("wss://chat-online-pjla.onrender.com");
+  //websocket = new WebSocket("ws://localhost:8081");
+
 
   // 3. Quando a conexão abrir de fato...
   websocket.onopen = () => {
